@@ -16,6 +16,7 @@ import ResultDialog, { type ExistingSet } from "@/components/ResultDialog";
 import GenerateKnockoutForm from "@/components/GenerateKnockoutForm";
 import DeleteTournamentForm from "@/components/DeleteTournamentForm";
 import { archiveTournamentAction, finishTournamentAction } from "../../actions";
+import { isUuid } from "@/lib/slug";
 
 export const dynamic = "force-dynamic";
 
@@ -24,13 +25,17 @@ export default async function TournamentPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id: slugParam } = await params;
   const admin = await isAdmin();
   const supabase = db();
 
-  const { data: tData } = await supabase.from("tournaments").select().eq("id", id).single();
+  let { data: tData } = await supabase.from("tournaments").select().eq("slug", slugParam).maybeSingle();
+  if (!tData && isUuid(slugParam)) {
+    ({ data: tData } = await supabase.from("tournaments").select().eq("id", slugParam).maybeSingle());
+  }
   if (!tData) notFound();
   const tournament = tData as Tournament;
+  const id = tournament.id;
   const settings = parseSettings(tournament.settings, tournament.discipline);
   const participant = PARTICIPANT[tournament.discipline];
   const color = DISCIPLINE_COLOR[tournament.discipline];

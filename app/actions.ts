@@ -16,6 +16,7 @@ import { roundRobin } from "@/lib/roundrobin";
 import { bracketSize, seedOrder } from "@/lib/bracket";
 import { computeStandings } from "@/lib/standings";
 import type { Match, MatchSet, Team, Tournament } from "@/lib/types";
+import { slugify } from "@/lib/slug";
 
 export interface ActionResult {
   error?: string;
@@ -88,6 +89,15 @@ export async function createTournamentAction(formData: FormData) {
 
   const supabase = db();
 
+  const baseSlug = slugify(name);
+  const { data: sameBase } = await supabase
+    .from("tournaments")
+    .select("slug")
+    .like("slug", `${baseSlug}%`);
+  const takenSlugs = new Set((sameBase ?? []).map((r) => r.slug as string));
+  let slug = baseSlug;
+  for (let n = 2; takenSlugs.has(slug); n++) slug = `${baseSlug}-${n}`;
+
   const { data: tournament, error: tErr } = await supabase
     .from("tournaments")
     .insert({
@@ -95,6 +105,7 @@ export async function createTournamentAction(formData: FormData) {
       discipline,
       status: groupCount > 0 ? "group" : "knockout",
       settings,
+      slug,
     })
     .select()
     .single();
@@ -170,7 +181,7 @@ export async function createTournamentAction(formData: FormData) {
   }
 
   revalidatePath("/");
-  redirect(`/turniej/${tournamentId}`);
+  redirect(`/turniej/${slug}`);
 }
 
 // ---------- zapis wyniku meczu ----------

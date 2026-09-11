@@ -2,6 +2,7 @@ import type { Discipline } from "./disciplines";
 
 export interface Tournament {
   id: string;
+  slug: string;
   name: string;
   discipline: Discipline;
   status: "setup" | "group" | "knockout" | "finished";

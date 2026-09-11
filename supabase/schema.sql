@@ -4,6 +4,7 @@
 create table if not exists tournaments (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  slug text not null unique,
   discipline text not null check (discipline in ('ping-pong', 'tenis', 'siatkowka', 'pilka-nozna', 'koszykowka', 'bule', 'bule-druzynowe')),
   status text not null default 'setup' check (status in ('setup', 'group', 'knockout', 'finished')),
   settings jsonb not null default '{}'::jsonb,

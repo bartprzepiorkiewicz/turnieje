@@ -108,7 +108,7 @@ export default async function HomePage() {
             const pct = total > 0 ? Math.round((done / total) * 100) : 0;
             return (
               <Link
-                href={`/turniej/${t.id}`}
+                href={`/turniej/${t.slug}`}
                 key={t.id}
                 className="t-card"
                 style={{
@@ -177,7 +177,7 @@ export default async function HomePage() {
             const color = DISCIPLINE_COLOR[t.discipline];
             return (
               <Link
-                href={`/turniej/${t.id}`}
+                href={`/turniej/${t.slug}`}
                 key={t.id}
                 className="archive-row"
                 style={{
