@@ -1,49 +1,1534 @@
+/* ===== Turnieje — styl "Techniczny PRO" ===== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b0d12;
+  --surface: #10131a;
+  --surface-2: #151923;
+  --surface-3: #1c2230;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --text: #e8ecf4;
+  --muted: #a3adc2;
+  --faint: #7d879e;
+  --accent: #b6f24e;
+  --accent-hover: #c9f96f;
+  --accent-dim: rgba(182, 242, 78, 0.35);
+  --on-accent: #0b0d12;
+  --amber: #f5a545;
+  --red: #f4655f;
+  --gold: #f2c14e;
+  --silver: #b9c2cf;
+  --bronze: #d09a66;
+  /* --font-sans i --font-mono ustawia next/font (Space Grotesk + JetBrains Mono) na <html> */
+  /* kolory dyscyplin */
+  --c-ping-pong: #7da7f9;
+  --c-tenis: #ecdb45;
+  --c-siatkowka: #5fd4f0;
+  --c-pilka: #b6f24e;
+  --c-kosz: #f5a545;
+  --c-bule: #b08df7;
+  /* aktywny kolor - domyslnie marka (limonka); strona turnieju/formularza nadpisuje go
+     kolorem biezacej dyscypliny, zeby "wpisz wynik" itp. byly spojne z motywem turnieju */
+  --tint: var(--accent);
+  --tint-dim: color-mix(in srgb, var(--tint) 35%, transparent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* --tint-dim inherituje sie jako juz-podstawiona wartosc z :root (z domyslnym
+   --accent), wiec kazde miejsce ktore nadpisuje --tint musi rowniez przeliczyc
+   --tint-dim lokalnie, inaczej obwodki/poswiaty zostaja limonkowe zamiast
+   koloru turnieju */
+.tint-scope,
+.t-card,
+.archive-row,
+.tile,
+.nowy-grid {
+  --tint-dim: color-mix(in srgb, var(--tint) 35%, transparent);
 }
 
-html {
-  height: 100%;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* prototyp motywu jasnego - mocne akcenty na jasnym tle */
+html[data-theme="light"] {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --surface-3: #e2e7ee;
+  --line: rgba(15, 23, 42, 0.09);
+  --line-strong: rgba(15, 23, 42, 0.18);
+  --text: #141922;
+  --muted: #4c5668;
+  --faint: #61708a;
+  --accent: #65a30d;
+  --accent-hover: #79c112;
+  --accent-dim: rgba(101, 163, 13, 0.4);
+  --on-accent: #ffffff;
+  --amber: #b06105;
+  --red: #dc2626;
+  --gold: #d99e1b;
+  --silver: #7e8a9b;
+  --bronze: #b0713a;
+  /* kolory dyscyplin przyciemnione wzgledem trybu ciemnego, tak zeby jako tekst
+     na bialym tle spelnialy WCAG AA (min. 4.5:1) */
+  --c-ping-pong: #2563eb;
+  --c-tenis: #7a6407;
+  --c-siatkowka: #077f9d;
+  --c-pilka: #51820a;
+  --c-kosz: #b06105;
+  --c-bule: #7c3aed;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-mono), Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+  text-transform: uppercase;
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--faint);
+  vertical-align: middle;
+}
+
+.dot-accent { background: var(--accent); }
+.dot-amber { background: var(--amber); }
+
+/* ---- top nav ---- */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 56px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+.brand:hover { color: var(--text); opacity: 0.85; }
+
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-user {
+  font-size: 12px;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.nav-link:hover { color: var(--text); }
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px 28px 48px;
+}
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 12px 28px;
+  font-size: 10px;
+  color: var(--faint);
+}
+
+/* ---- typography ---- */
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 600;
   margin: 0;
 }
 
-a {
-  color: inherit;
+a { color: var(--accent); }
+a:hover { color: #d3ff7d; }
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.error {
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* ---- cards & sections ---- */
+
+.card,
+form.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 14px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 12px;
+}
+
+.section-head .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ---- tables ---- */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0;
+}
+
+th {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 500;
+  text-align: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: 7px 10px;
+  font-size: 13px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+tr:last-child td { border-bottom: none; }
+
+th.tl, td.tl { text-align: left; }
+
+td.rank { color: var(--faint); font-family: var(--font-mono), monospace; }
+
+.group-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.group-card .group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 14px 0;
+}
+
+@media (max-width: 900px) {
+  .groups-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- forms ---- */
+
+label {
+  display: block;
+  margin-top: 0.8rem;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  max-width: 24rem;
+  padding: 0.5rem 0.6rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--tint-dim);
+}
+
+input.score {
+  width: 3.5rem;
+  max-width: 3.5rem;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 0.5rem 1.1rem;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--tint);
+  color: var(--on-accent);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+button:hover {
+  background: color-mix(in srgb, var(--tint) 88%, white);
+  box-shadow: 0 0 16px var(--tint-dim);
+}
+
+button:disabled {
+  background: var(--surface-3);
+  color: var(--faint);
+  cursor: default;
+}
+
+button.danger {
+  background: transparent;
+  border: 1px solid rgba(244, 101, 95, 0.4);
+  color: var(--red);
+}
+
+button.danger:hover { background: rgba(244, 101, 95, 0.1); box-shadow: none; }
+
+button.secondary {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+
+button.secondary:hover { background: var(--surface-2); box-shadow: none; }
+
+button.mini {
+  padding: 0.3rem 0.8rem;
+  margin: 0;
+  font-size: 11px;
+  font-family: var(--font-mono), monospace;
+}
+
+.theme-toggle {
+  margin: 0;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+.theme-toggle:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.inline-form { display: inline; }
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.link-button:hover { color: var(--text); background: none; }
+
+/* ---- badges & chips ---- */
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 5px;
+  background: var(--surface-3);
+  color: var(--muted);
+  margin-left: 0.6rem;
+  vertical-align: middle;
+}
+
+.badge.live { background: rgba(245, 165, 69, 0.15); color: var(--amber); }
+.badge.done { background: var(--tint-dim); color: var(--tint); }
+
+.chip {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 5px 12px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+}
+
+/* ---- home: counters, tournament cards, tiles ---- */
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.counters { display: flex; gap: 28px; }
+
+.counter { text-align: right; }
+
+.counter .val {
+  font-family: var(--font-mono), monospace;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.t-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .t-cards { grid-template-columns: 1fr; }
+}
+
+.t-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px 22px;
+  color: var(--text);
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.t-card {
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.t-card:hover {
+  border-color: var(--tint-dim);
+  color: var(--text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+
+/* tlo kart jest teraz mocno tonowane kolorem dyscypliny - domyslne --faint/--muted
+   nie maja tam juz dosc kontrastu (WCAG), wiec podciagamy je w strone --text */
+.t-card .hint { color: color-mix(in srgb, var(--text) 65%, var(--muted)); }
+.t-card .label { color: color-mix(in srgb, var(--text) 45%, var(--muted)); }
+
+.t-card .row { display: flex; justify-content: space-between; align-items: center; }
+
+.t-card .name { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+
+.t-card .disc {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.t-card .phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.progress {
+  height: 3px;
+  background: var(--surface-3);
+  border-radius: 2px;
+}
+
+.progress > div {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--tint);
+}
+
+.archive-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin: 10px 0;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.archive-row {
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.archive-row:hover {
+  border-color: var(--tint-dim);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.archive-row .label { color: color-mix(in srgb, var(--text) 40%, var(--muted)); }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1000px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  height: 118px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.tile {
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.tile:hover {
+  border-color: var(--tint-dim);
+  color: var(--text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+.tile svg { transition: opacity 0.15s; }
+
+.tile:hover svg { opacity: 0.85 !important; }
+
+.tile {
+  /* w trybie ciemnym tlo kafelka jest nasycone i ciemne - ikona rozjasniona
+     w strone bieli; w jasnym tle jest nasycone i jasne - ikona przyciemniona
+     w strone czerni, inaczej ginie (musi byc lokalne, patrz --tint-dim) */
+  --tile-icon-stroke: color-mix(in srgb, white 60%, var(--tint));
+}
+
+html[data-theme="light"] .tile {
+  --tile-icon-stroke: color-mix(in srgb, black 30%, var(--tint));
+}
+
+.tile-art {
+  position: absolute;
+  right: -14px;
+  top: -16px;
+  opacity: 0.65;
+}
+
+.tile .t-name {
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
+  text-shadow: 0 1px 5px color-mix(in srgb, black 35%, transparent);
+}
+
+.tile .t-hint {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: color-mix(in srgb, var(--text) 78%, var(--muted));
+  position: relative;
+}
+
+/* ---- tournament banner & stepper ---- */
+
+.banner {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.banner-art {
+  position: absolute;
+  right: 24px;
+  top: -46px;
+  opacity: 0.5;
+}
+
+.banner-art-mini {
+  position: absolute;
+  right: 110px;
+  top: -30px;
+  opacity: 0.4;
+}
+
+.banner .inner {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 20px 24px;
+  flex-wrap: wrap;
+}
+
+.banner .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* baner ma teraz taki sam mocny wash jak aktywne karty na stronie glownej -
+   domyslne --faint/--muted traca tam kontrast (WCAG), wiec podciagamy w strone --text */
+.banner .chip:not(.chip-action) { color: color-mix(in srgb, var(--text) 45%, var(--muted)); }
+.banner .stepper .step { color: color-mix(in srgb, var(--text) 40%, var(--muted)); }
+.banner .label { color: color-mix(in srgb, var(--text) 45%, var(--muted)); }
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.stepper .step { color: var(--faint); display: inline-flex; align-items: center; gap: 6px; }
+.stepper .step.on { color: var(--tint); }
+.stepper .sep { width: 26px; height: 1px; background: var(--line-strong); }
+
+/* ---- schedule ---- */
+
+.sched-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.sched-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sched-body { padding: 4px 18px 12px; }
+
+.round-label {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  display: block;
+  padding: 10px 0 2px;
+}
+
+.match-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13.5px;
+}
+
+.match-row:last-child { border-bottom: none; }
+
+.match-row.next-up {
+  background: color-mix(in srgb, var(--tint) 5%, transparent);
+  margin: 0 -18px;
+  padding-left: 18px;
+  padding-right: 18px;
+  border-radius: 6px;
+}
+
+.match-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.match-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.match-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.match-row .teams { flex: 1; min-width: 0; }
+
+.match-row .result {
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  width: 88px;
+  flex-shrink: 0;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.match-row .result.pending {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.match-row .sets-note {
+  width: 150px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.match-row .action {
+  width: 106px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* limonkowy przycisk tylko przy aktywnym meczu; reszta wyciszona */
+/* ujednolicony wyglad guzikow akcji ("wpisz wynik" / "otworz" / "zmien") -
+   .chip-action to modyfikator dla klikalnych chipow (w odroznieniu od zwyklych
+   .chip jako informacyjnych tagow, ktore zostaja przy stonowanym wygladzie);
+   w trybie ciemnym pelne, nasycone tlo koloru turnieju; w jasnym - patrz
+   override nizej (stonowany obrys, kolor turnieju dopiero na hover) */
+.chip-action,
+button.mini:not(.secondary) {
+  background: var(--tint);
+  color: var(--on-accent);
+  border: 1px solid transparent;
+}
+
+.chip-action:hover,
+.t-card:hover .chip-action,
+button.mini:not(.secondary):hover {
+  background: color-mix(in srgb, var(--tint) 88%, white);
+  box-shadow: 0 0 16px var(--tint-dim);
+}
+
+html[data-theme="light"] .chip-action,
+html[data-theme="light"] button.mini:not(.secondary) {
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  border-color: var(--line-strong);
+  color: var(--muted);
+}
+
+html[data-theme="light"] .chip-action:hover,
+html[data-theme="light"] .t-card:hover .chip-action,
+html[data-theme="light"] button.mini:not(.secondary):hover {
+  background: var(--tint-dim);
+  border-color: var(--tint);
+  color: var(--tint);
+  box-shadow: none;
+}
+
+.schedule-nr {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--faint);
+  min-width: 24px;
+  text-align: right;
+}
+
+.schedule-group {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: var(--surface-3);
+  border-radius: 4px;
+  padding: 3px 8px;
+  min-width: 32px;
+  text-align: center;
+}
+
+.sets-note {
+  font-family: var(--font-mono), monospace;
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.winner { font-weight: 700; }
+
+.scroll-hint { display: none; }
+
+.na-stole {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--tint);
+}
+
+/* ---- bracket ---- */
+
+.bracket-card {
+  background: var(--surface);
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.bracket {
+  overflow-x: auto;
+  padding: 30px 20px 26px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+.bracket::-webkit-scrollbar { height: 8px; }
+.bracket::-webkit-scrollbar-track { background: transparent; }
+.bracket::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 4px;
+}
+.bracket::-webkit-scrollbar-thumb:hover { background: var(--line-strong); }
+
+.bracket-inner {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  width: max-content;
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
+
+.bracket-col {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-width: 178px;
+}
+
+.bracket-col .col-label {
+  text-align: center;
+}
+
+.bracket-center {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.ko {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  width: 190px;
+  overflow: hidden;
+}
+
+.ko .r {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  padding: 7px 12px;
+}
+
+.ko .r + .r { border-top: 1px solid var(--line); }
+
+.ko .score {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.ko.final {
+  width: 200px;
+}
+
+.ko.third { opacity: 0.8; }
+
+.ko-actions {
+  padding: 4px 12px 8px;
+  font-size: 11px;
+}
+
+/* ---- dialogs ---- */
+
+.result-dialog {
+  /* dialog zostaje w drzewie DOM (tylko wizualnie trafia do top layer), wiec
+     bez tego resetu dziedziczy np. text-align: right z .match-row .action,
+     ktory go otwiera */
+  text-align: left;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  padding: 1.4rem 1.7rem 0;
+  max-width: 40rem;
+  width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.result-dialog::backdrop { background: rgba(5, 6, 9, 0.72); }
+
+.result-dialog h3 {
+  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+}
+
+.result-dialog .hint { font-size: 12px; }
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.set-row:last-of-type { border-bottom: none; }
+
+.set-no {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+  text-transform: uppercase;
+  width: 52px;
+}
+
+.seg-group {
+  display: inline-flex;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.seg {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 10px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  background: var(--surface-2);
+  border-right: 1px solid var(--line);
+  text-align: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.seg:last-child { border-right: none; }
+
+.seg:hover { background: var(--surface-3); color: var(--text); }
+
+.seg input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  margin: 0;
+}
+
+.seg:has(input:checked) {
+  background: var(--tint);
+  color: var(--on-accent);
+  font-weight: 700;
+}
+
+.seg.seg-none { flex: 0 0 52px; }
+
+/* "-" (set nie grany) zaznaczony wyglada neutralnie, nie jak zwyciezca */
+.seg.seg-none:has(input:checked) {
+  background: var(--surface-3);
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.set-pts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.set-pts .label { width: auto; }
+
+.result-dialog input.score {
+  width: 4.2rem;
+  max-width: 4.2rem;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 0.45rem 0.4rem;
+  margin-top: 0;
+}
+
+.goals-grid { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+
+/* pasek Zapisz/Anuluj przyklejony do dolu okna - zostaje w zasiegu nawet gdy
+   formularz (np. BO5/BO7) jest dluzszy niz wysokosc ekranu i trzeba przewijac */
+.dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  position: sticky;
+  bottom: 0;
+  margin: 0 -1.7rem;
+  padding: 1.1rem 1.7rem 1.4rem;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+/* gora rezerwuje sie na marginesie POPRZEDNIEGO elementu, nie na margin-top
+   .dialog-actions - przy krotkiej tresci (np. wynik bramkowy bez wielu setow)
+   sticky ignoruje wlasny margin-top i odstep znika (sprawdzone empirycznie:
+   position:static przywraca pelny odstep, wiec to kwestia sticky, nie CSS) */
+*:has(+ .dialog-actions) {
+  margin-bottom: 1.6rem;
+}
+
+.goals-grid label { font-size: 14px; }
+
+.goals-grid input.score { margin-top: 0.3rem; }
+
+/* ---- formularz nowego turnieju ---- */
+
+.nowy-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+@media (max-width: 1000px) {
+  .nowy-grid { flex-direction: column; }
+  .nowy-rail { width: 100% !important; position: static !important; }
+}
+
+.nowy-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.nowy-rail {
+  width: 340px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+}
+
+.form-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 22px;
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.sec-no {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--tint);
+}
+
+.sec-title { font-weight: 600; font-size: 14px; }
+
+.sec-rule { flex: 1; height: 1px; background: var(--line); }
+
+.fld {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 14px 0 6px;
+  font-weight: 500;
+}
+
+.fld .dim { color: var(--faint); }
+
+.seg-fit { flex: none; display: inline-flex; }
+
+.seg-fit .seg { flex: none; padding: 8px 16px; font-family: var(--font-mono), monospace; font-size: 13px; }
+
+.sub-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 800px) {
+  .format-grid { grid-template-columns: 1fr; }
+}
+
+input.num {
+  width: 72px;
+  max-width: 72px;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  margin-top: 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.switch input { position: absolute; opacity: 0; width: 0; margin: 0; }
+
+.switch .track {
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--line-strong);
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.switch .track::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 2.5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: left 0.15s, background 0.15s;
+}
+
+.switch:has(input:checked) .track {
+  background: var(--tint);
+  border-color: transparent;
+}
+
+.switch:has(input:checked) .track::after {
+  left: 20px;
+  background: var(--on-accent);
+}
+
+.rail-card {
+  background: var(--surface);
+  border: 1px solid var(--tint-dim);
+  border-radius: 10px;
+  padding: 20px 22px;
+}
+
+.srow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.srow .k { color: var(--muted); }
+.srow .v { font-family: var(--font-mono), monospace; font-variant-numeric: tabular-nums; }
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px solid var(--line-strong);
+  margin-top: 8px;
+  padding-top: 14px;
+}
+
+.total-row .big {
+  font-family: var(--font-mono), monospace;
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--tint);
+}
+
+.total-row .big small {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.rail-card button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 14px;
+  margin-top: 16px;
+}
+
+.rail-note {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: var(--faint);
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ---- login ---- */
+
+.login-wrap {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  width: 360px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 34px 34px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.login-card .brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.login-card h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.login-card form {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.login-card input {
+  max-width: 100%;
+  font-size: 15px;
+  padding: 0.65rem 0.8rem;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.2em;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 0.65rem;
+  font-size: 14px;
+}
+
+/* ---- misc ---- */
+
+.disabled-field { color: var(--faint); }
+
+.disabled-field input:disabled { background: var(--surface-3); color: var(--faint); }
+
+/* ---- podium ---- */
+
+.podium-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 12px;
+  margin: 14px 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.podium-cols {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 28px;
+  padding: 34px 20px 0;
+}
+
+.podium-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 150px;
+}
+
+.podium-col .medal {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1.5px solid;
+}
+
+.podium-col.first .medal {
+  width: 46px;
+  height: 46px;
+  font-size: 19px;
+  color: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--gold) 30%, transparent);
+}
+
+.podium-col.second .medal { color: var(--silver); border-color: var(--silver); }
+.podium-col.third .medal { color: var(--bronze); border-color: var(--bronze); }
+
+.podium-col .p-name {
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+}
+
+.podium-col.first .p-name {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.podium-col .pedestal {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  margin-top: 6px;
+}
+
+.podium-col.first .pedestal {
+  height: 64px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 30%, transparent), transparent);
+  border-top: 2px solid var(--gold);
+}
+
+.podium-col.second .pedestal {
+  height: 42px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--silver) 22%, transparent), transparent);
+  border-top: 2px solid var(--silver);
+}
+
+.podium-col.third .pedestal {
+  height: 28px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bronze) 22%, transparent), transparent);
+  border-top: 2px solid var(--bronze);
+}
+
+/* ===== telefony (testowano na iPhone 14, 390px) ===== */
+@media (max-width: 560px) {
+  .container { padding: 18px 16px 40px; }
+
+  /* pasek gorny: mniej powietrza, chowamy slowo "organizator" (kropka statusu zostaje) */
+  .topbar { padding: 0 14px; gap: 6px; }
+  .topnav { gap: 10px; }
+  .nav-user-label { display: none; }
+
+  /* naglowek strony glownej: liczniki spadaja pod tytul zamiast go zaslaniac */
+  .page-head {
+    flex-wrap: wrap;
+    row-gap: 14px;
   }
+  .counters { gap: 18px; }
+  .counter .val { font-size: 19px; }
+
+  /* motyw dyscypliny w bannerze: mniejszy i przesuniety, zeby nie zachodzil na tytul */
+  .banner-art {
+    width: 120px !important;
+    height: 120px !important;
+    right: -20px;
+    top: -18px;
+    opacity: 0.35;
+  }
+  .banner-art-mini {
+    width: 90px !important;
+    height: 90px !important;
+    right: -16px;
+    top: -14px;
+    opacity: 0.3;
+  }
+  .banner .inner { padding: 16px 18px; }
+  h1 { font-size: 22px; }
+
+  /* wiersz terminarza: numer kolejki + grupa gora (krotka, stala linia),
+     gracze + wynik razem pod spodem (jedna spojna linia, zawija sie naturalnie) */
+  .match-row {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  .match-head { flex-basis: 100%; }
+  .match-body { flex-basis: 100%; flex-wrap: wrap; row-gap: 6px; }
+  .match-meta {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  .match-row .result { width: auto; text-align: left; }
+  .match-row .sets-note { display: none; }
+  .match-row .action { width: auto; margin-left: auto; }
+
+  /* podium: trzy kolumny obok siebie nie miesca sie - ranking w pionie jako karty,
+     1. miejsce na gorze; medal po lewej, nazwa+etykieta ulozone obok (grid, bez zmian w JSX) */
+  .podium-cols {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 22px 20px;
+  }
+  .podium-col {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "medal name" "medal label";
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 2px;
+    min-width: 0;
+    width: 100%;
+  }
+  .podium-col .medal { grid-area: medal; }
+  .podium-col .p-name { grid-area: name; text-align: left; }
+  .podium-col .label { grid-area: label; text-align: left; }
+  .podium-col .pedestal { display: none; }
+  .podium-col.first { order: -1; }
+  .podium-col.first .p-name { font-size: 19px; }
+
+  /* okno wyniku: etykieta / segmenty wygrany-przegrany / punkty w osobnych liniach */
+  .set-row { flex-wrap: wrap; row-gap: 8px; }
+  .set-no { flex-basis: 100%; width: auto; }
+  .seg-group { flex-basis: 100%; }
+  .set-pts { flex-basis: 100%; justify-content: flex-start; }
+  .result-dialog { padding: 1.2rem 1.2rem; }
+  .result-dialog h3 { font-size: 18px; }
+
+  .scroll-hint { display: inline; color: var(--tint); }
 }
