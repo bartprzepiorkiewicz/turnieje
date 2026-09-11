@@ -145,7 +145,7 @@ export default async function HomePage() {
                   <span className="hint" style={{ fontSize: 13 }}>
                     {next ? (
                       <>
-                        gra się:{" "}
+                        gra:{" "}
                         <strong style={{ color: "var(--text)" }}>
                           {teamName(next.team_a)} — {teamName(next.team_b)}
                         </strong>
