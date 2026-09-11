@@ -15,7 +15,7 @@ import type { Group, Match, MatchSet, Team, Tournament } from "@/lib/types";
 import ResultDialog, { type ExistingSet } from "@/components/ResultDialog";
 import GenerateKnockoutForm from "@/components/GenerateKnockoutForm";
 import DeleteTournamentForm from "@/components/DeleteTournamentForm";
-import { finishTournamentAction } from "../../actions";
+import { archiveTournamentAction, finishTournamentAction } from "../../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -488,6 +488,14 @@ export default async function TournamentPage({
               <input type="hidden" name="tournamentId" value={id} />
               <button type="submit" style={{ marginTop: 0 }}>
                 Zakończ turniej
+              </button>
+            </form>
+          )}
+          {tournament.status === "finished" && !tournament.archived_at && (
+            <form action={archiveTournamentAction} className="inline-form" suppressHydrationWarning>
+              <input type="hidden" name="tournamentId" value={id} />
+              <button type="submit" className="secondary" style={{ marginTop: 0 }}>
+                Archiwizuj
               </button>
             </form>
           )}

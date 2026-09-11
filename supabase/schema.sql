@@ -7,7 +7,8 @@ create table if not exists tournaments (
   discipline text not null check (discipline in ('ping-pong', 'tenis', 'siatkowka', 'pilka-nozna', 'koszykowka', 'bule', 'bule-druzynowe')),
   status text not null default 'setup' check (status in ('setup', 'group', 'knockout', 'finished')),
   settings jsonb not null default '{}'::jsonb,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  archived_at timestamptz
 );
 
 create table if not exists groups (

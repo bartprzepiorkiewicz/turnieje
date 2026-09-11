@@ -7,6 +7,7 @@ export interface Tournament {
   status: "setup" | "group" | "knockout" | "finished";
   settings: Record<string, unknown>;
   created_at: string;
+  archived_at: string | null;
 }
 
 export interface Group {

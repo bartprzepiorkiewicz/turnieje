@@ -36,8 +36,8 @@ export default async function HomePage() {
     dbError = e instanceof Error ? e.message : String(e);
   }
 
-  const active = tournaments.filter((t) => t.status !== "finished");
-  const finished = tournaments.filter((t) => t.status === "finished");
+  const active = tournaments.filter((t) => !t.archived_at);
+  const archived = tournaments.filter((t) => t.archived_at);
   const teamName = (id: string | null) => teams.find((t) => t.id === id)?.name ?? "?";
 
   const cardData = (t: Tournament) => {
@@ -103,7 +103,7 @@ export default async function HomePage() {
       {active.length > 0 && (
         <div className="t-cards">
           {active.map((t) => {
-            const { total, done, next } = cardData(t);
+            const { total, done, next, winnerName } = cardData(t);
             const color = DISCIPLINE_COLOR[t.discipline];
             const pct = total > 0 ? Math.round((done / total) * 100) : 0;
             return (
@@ -150,6 +150,10 @@ export default async function HomePage() {
                           {teamName(next.team_a)} — {teamName(next.team_b)}
                         </strong>
                       </>
+                    ) : winnerName ? (
+                      <>
+                        wygrywa: <strong style={{ color: "var(--text)" }}>{winnerName}</strong>
+                      </>
                     ) : (
                       "wszystkie mecze rozegrane"
                     )}
@@ -162,13 +166,13 @@ export default async function HomePage() {
         </div>
       )}
 
-      {finished.length > 0 && (
+      {archived.length > 0 && (
         <>
           <div className="section-head">
             <span className="label">archiwum</span>
             <span className="rule" />
           </div>
-          {finished.map((t) => {
+          {archived.map((t) => {
             const { winnerName } = cardData(t);
             const color = DISCIPLINE_COLOR[t.discipline];
             return (

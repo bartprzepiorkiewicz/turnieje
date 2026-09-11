@@ -535,6 +535,14 @@ export async function finishTournamentAction(formData: FormData) {
   revalidatePath(`/turniej/${tournamentId}`);
 }
 
+export async function archiveTournamentAction(formData: FormData) {
+  await requireAdmin();
+  const tournamentId = String(formData.get("tournamentId"));
+  await db().from("tournaments").update({ archived_at: new Date().toISOString() }).eq("id", tournamentId);
+  revalidatePath("/");
+  revalidatePath(`/turniej/${tournamentId}`);
+}
+
 export async function deleteTournamentAction(formData: FormData) {
   await requireAdmin();
   const tournamentId = String(formData.get("tournamentId"));
