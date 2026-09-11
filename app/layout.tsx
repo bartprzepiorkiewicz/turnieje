@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -21,6 +21,15 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Turnieje",
   description: "Organizacja turniejów sportowych",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Turnieje",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#b6f24e",
 };
 
 export default async function RootLayout({
