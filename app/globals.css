@@ -605,15 +605,20 @@ button.mini {
 
 .tile:hover svg { opacity: 0.85 !important; }
 
-.tile {
-  /* w trybie ciemnym tlo kafelka jest nasycone i ciemne - ikona rozjasniona
-     w strone bieli; w jasnym tle jest nasycone i jasne - ikona przyciemniona
-     w strone czerni, inaczej ginie (musi byc lokalne, patrz --tint-dim) */
-  --tile-icon-stroke: color-mix(in srgb, white 60%, var(--tint));
+.tile,
+.banner {
+  /* ikony duotone (--icon-fill-1 = glowna bryla, --icon-fill-2 = akcent/blask) -
+     w trybie ciemnym tlo jest nasycone i ciemne, ikona rozjasniona w strone
+     bieli; w jasnym tle jest nasycone i jasne, ikona przyciemniona w strone
+     czerni, inaczej ginie (musi byc lokalne, patrz --tint-dim) */
+  --icon-fill-1: var(--tint);
+  --icon-fill-2: color-mix(in srgb, var(--icon-fill-1) 55%, transparent);
 }
 
-html[data-theme="light"] .tile {
-  --tile-icon-stroke: color-mix(in srgb, black 30%, var(--tint));
+html[data-theme="light"] .tile,
+html[data-theme="light"] .banner {
+  --icon-fill-1: var(--tint);
+  --icon-fill-2: color-mix(in srgb, var(--icon-fill-1) 55%, transparent);
 }
 
 .tile-art {
@@ -649,15 +654,17 @@ html[data-theme="light"] .tile {
 
 .banner-art {
   position: absolute;
-  right: 24px;
-  top: -46px;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0.5;
 }
 
 .banner-art-mini {
   position: absolute;
-  right: 110px;
-  top: -30px;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0.4;
 }
 
@@ -1465,17 +1472,15 @@ input.num {
 
   /* motyw dyscypliny w bannerze: mniejszy i przesuniety, zeby nie zachodzil na tytul */
   .banner-art {
-    width: 120px !important;
-    height: 120px !important;
-    right: -20px;
-    top: -18px;
+    width: 100px !important;
+    height: 100px !important;
+    right: 8px;
     opacity: 0.35;
   }
   .banner-art-mini {
-    width: 90px !important;
-    height: 90px !important;
-    right: -16px;
-    top: -14px;
+    width: 76px !important;
+    height: 76px !important;
+    right: 8px;
     opacity: 0.3;
   }
   .banner .inner { padding: 16px 18px; }

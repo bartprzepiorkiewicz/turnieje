@@ -230,12 +230,7 @@ export default async function HomePage() {
                     "--tint": color,
                   } as React.CSSProperties}
                 >
-                  <DisciplineArt
-                    discipline={d}
-                    size={130}
-                    className="tile-art"
-                    style={{ stroke: "var(--tile-icon-stroke)" }}
-                  />
+                  <DisciplineArt discipline={d} size={130} className="tile-art" />
                   <span className="t-name">{DISCIPLINE_LABELS[d]}</span>
                   <span className="t-hint">{DISCIPLINE_HINT[d]}</span>
                 </Link>

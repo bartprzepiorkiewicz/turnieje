@@ -206,7 +206,7 @@ export default async function TournamentPage({
           background: `linear-gradient(135deg, ${disciplineWash(tournament.discipline, 18)} 0%, ${disciplineWash(tournament.discipline, 34)} 100%)`,
         }}
       >
-        <DisciplineArt discipline={tournament.discipline} size={230} strokeWidth={1.1} className="banner-art" />
+        <DisciplineArt discipline={tournament.discipline} size={108} className="banner-art" />
         <div className="inner">
           <div>
             <div className="label">

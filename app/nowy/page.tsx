@@ -61,7 +61,7 @@ export default async function NewTournamentPage({
             background: `linear-gradient(135deg, ${disciplineWash(discipline, 18)} 0%, ${disciplineWash(discipline, 34)} 100%)`,
           }}
         >
-          <DisciplineArt discipline={discipline} size={150} strokeWidth={1.3} className="banner-art-mini" />
+          <DisciplineArt discipline={discipline} size={100} className="banner-art-mini" />
           <div className="inner" style={{ padding: "16px 22px", alignItems: "center" }}>
             <div>
               <div className="label">nowy turniej · dyscyplina</div>
