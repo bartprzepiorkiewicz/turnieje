@@ -58,3 +58,11 @@ Aplikacja: http://localhost:3000
 
 Kolejność: punkty → wynik bezpośredniego meczu → bilans setów/bramek → bilans małych
 punktów (punkty/gemy w setach) → zdobyte małe punkty.
+
+## Źródła
+
+Ikony dyscyplin (`components/icons-src/`) pochodzą z zestawu
+[SVG Repo — Sports Duotone Icons](https://www.svgrepo.com/collection/sports-duotone-icons/)
+(bule drużynowe to własna kompozycja w tej samej konwencji kolorystycznej —
+patrz `components/icons-src/bule-druzynowe.svg`). Przetwarzane jednorazowo
+przez `scripts/gen-discipline-icons.mjs` na `components/discipline-icons.generated.ts`.
