@@ -52,6 +52,7 @@ export default async function RootLayout({
             <span className="brand-mark">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0b0d12" strokeWidth="2.6" strokeLinecap="round">
                 <path d="M7 4h10v5a5 5 0 0 1-10 0V4z" />
+                <path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4" />
                 <path d="M12 14v4M8 20h8" />
               </svg>
             </span>
